@@ -9,6 +9,10 @@ interface BookTableProps {
     seed: number;
     avgLikes: number;
     avgReviews: number;
+    books: Book[],
+    isLoading: boolean,
+    setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
+    setIsLoading: (value: boolean) => void;
 }
 
 export default function BookTable({
@@ -16,10 +20,12 @@ export default function BookTable({
     seed,
     avgLikes,
     avgReviews,
+    books,
+    isLoading,
+    setBooks,
+    setIsLoading
 }: BookTableProps) {
-    const [books, setBooks] = useState<Book[]>([]);
     const [page, setPage] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
     const loaderRef = useRef(null);
     const loaderParentRef = useRef(null);
 
@@ -48,7 +54,7 @@ export default function BookTable({
         setIsLoading(true);
         const newPage = page + 1;
         const newBooks = await fetchBooks(newPage);
-        setBooks((prev) => [...prev, ...newBooks]);
+        setBooks((prev: Book[]) => [...prev, ...newBooks]);
         setPage(newPage);
         setIsLoading(false);
     }, [page, fetchBooks, isLoading]);

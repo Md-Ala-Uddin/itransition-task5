@@ -26,6 +26,7 @@ type Props = {
     onLikesChange: (value: number) => void;
     onReviewsChange: (value: number) => void;
     onRandomizeSeed: () => void;
+    onExportClick: () => void;
 };
 
 export default function Controls({
@@ -40,6 +41,7 @@ export default function Controls({
     onLikesChange,
     onReviewsChange,
     onRandomizeSeed,
+    onExportClick,
 }: Props) {
     return (
         <div className="mb-4 flex flex-col md:flex-row gap-4">
@@ -73,6 +75,8 @@ export default function Controls({
                 showTable={showTable}
                 onShowTableChange={onShowTableChange}
             />
+
+            <Button onClick={onExportClick}>Export</Button>
         </div>
     );
 }

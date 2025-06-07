@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import BookTable from "./components/BookTable";
 import Controls from "./components/Controls";
+import { Book } from "./lib/definitions";
 
 export default function HomePage() {
     const [locale, setLocale] = useState("en-US");
@@ -11,11 +12,17 @@ export default function HomePage() {
     const [reviews, setReviews] = useState(2);
     const [randomizeTrigger, setRandomizeTrigger] = useState(0);
     const [showTable, setShowTable] = useState<boolean>(true);
+    const [books, setBooks] = useState<Book[]>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
     const handleRandomSeed = () => {
         const newSeed = Math.floor(Math.random() * 1000000);
         setSeed(newSeed);
         setRandomizeTrigger((prev) => prev + 1);
+    };
+
+    const handleExportClick = () => {
+        console.log("exporting...");
     };
 
     return (
@@ -32,6 +39,7 @@ export default function HomePage() {
                 onLikesChange={setLikes}
                 onReviewsChange={setReviews}
                 onRandomizeSeed={handleRandomSeed}
+                onExportClick={handleExportClick}
             />
             {showTable ? (
                 <BookTable
@@ -39,6 +47,10 @@ export default function HomePage() {
                     seed={seed}
                     avgLikes={likes}
                     avgReviews={reviews}
+                    books={books}
+                    isLoading={isLoading}
+                    setBooks={setBooks}
+                    setIsLoading={setIsLoading}
                 />
             ) : (
                 "grid"
