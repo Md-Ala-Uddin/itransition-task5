@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/select";
 import { ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ToggleGroup } from "@radix-ui/react-toggle-group";
-import { LayoutGrid, Table } from "lucide-react";
+import { Download, LayoutGrid, Table } from "lucide-react";
 
 type Props = {
     showTable: boolean;
@@ -76,7 +76,9 @@ export default function Controls({
                 onShowTableChange={onShowTableChange}
             />
 
-            <Button onClick={onExportClick}>Export</Button>
+            <div className="h-16 basis-1 grow flex justify-center items-center">
+                <Button onClick={onExportClick}> <Download className="w-4 h-4" /> Export</Button>
+            </div>
         </div>
     );
 }

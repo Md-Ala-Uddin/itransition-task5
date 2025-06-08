@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import BookTable from "./components/BookTable";
 import Controls from "./components/Controls";
 import { Book } from "./lib/definitions";
+import Papa from "papaparse";
 
 export default function HomePage() {
     const [locale, setLocale] = useState("en-US");
@@ -22,7 +23,18 @@ export default function HomePage() {
     };
 
     const handleExportClick = () => {
-        console.log("exporting...");
+        const csv = Papa.unparse(books, {
+            columns: ["index", "isbn", "title", "author", "publisher"],
+        });
+
+        const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `books_seed${seed}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (
