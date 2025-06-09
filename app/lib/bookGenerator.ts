@@ -10,7 +10,7 @@ export function generateBooks({
     avgLikes,
     avgReviews,
 }: {
-    seed: any;
+    seed: number | string;
     page: number;
     locale: string;
     avgLikes: number;
@@ -19,11 +19,11 @@ export function generateBooks({
     const rng = seedrandom(`${seed}-${page}`);
     const faker = getFakerForLocale(locale);
 
-    return Array.from({ length: 10 }, (_, i) => {
-        const index = page * 10 + i + 1;
+    return Array.from({ length: 10 }, (_, index) => {
+        const bookIndex = page * 10 + index + 1;
         faker.seed(rng() * 1e9);
         return {
-            index,
+            index: bookIndex,
             image: faker.image.dataUri({
                 width: 30,
                 height: 40,
@@ -49,7 +49,7 @@ function calculateProvFraction(avg: number, rng: PRNG) {
 
 function generateReviews(avg: number, rng: PRNG, faker: Faker) {
     const count = calculateProvFraction(avg, rng);
-    return Array.from({ length: count }, (_, i) => ({
+    return Array.from({ length: count }, () => ({
         author: faker.person.fullName(),
         text: faker.lorem.paragraph(),
     }));

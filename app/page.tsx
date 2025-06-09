@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import BookTable from "./components/BookTable";
 import Controls from "./components/Controls";
 import { Book } from "./lib/definitions";
@@ -11,7 +11,6 @@ export default function HomePage() {
     const [seed, setSeed] = useState(42);
     const [likes, setLikes] = useState(5);
     const [reviews, setReviews] = useState(2);
-    const [randomizeTrigger, setRandomizeTrigger] = useState(0);
     const [showTable, setShowTable] = useState<boolean>(true);
     const [books, setBooks] = useState<Book[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -19,7 +18,6 @@ export default function HomePage() {
     const handleRandomSeed = () => {
         const newSeed = Math.floor(Math.random() * 1000000);
         setSeed(newSeed);
-        setRandomizeTrigger((prev) => prev + 1);
     };
 
     const handleExportClick = () => {

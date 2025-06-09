@@ -54,10 +54,12 @@ function BookCoverAndLikes({
 }) {
     return (
         <div className={className}>
-            <img
+            <Image
                 className="w-full mb-2 object-contain"
                 src={book.image}
                 alt="Book Image"
+                width={200}
+                height={300}
             />
             <div className=" rounded-md flex justify-center">
                 <div className="bg-foreground px-2 py-1 border rounded-xl flex justify-center items-center">

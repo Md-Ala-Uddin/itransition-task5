@@ -57,12 +57,12 @@ export default function BookTable({
         setBooks((prev: Book[]) => [...prev, ...newBooks]);
         setPage(newPage);
         setIsLoading(false);
-    }, [page, fetchBooks, isLoading]);
+    }, [page, fetchBooks, isLoading, setBooks, setIsLoading]);
 
     useEffect(() => {
         setPage(0);
         fetchBooks(0).then(setBooks);
-    }, [locale, seed, avgLikes, avgReviews, fetchBooks]);
+    }, [locale, seed, avgLikes, avgReviews, fetchBooks, setBooks]);
 
     useEffect(() => {
         const currentRef = loaderRef.current;
