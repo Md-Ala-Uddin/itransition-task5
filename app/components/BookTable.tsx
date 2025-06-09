@@ -5,82 +5,18 @@ import { Book } from "@/app/lib/definitions";
 import { LoaderCircle } from "lucide-react";
 
 interface BookTableProps {
-    locale: string;
-    seed: number;
-    avgLikes: number;
-    avgReviews: number;
-    books: Book[],
-    isLoading: boolean,
-    setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
-    setIsLoading: (value: boolean) => void;
+    books: Book[];
+    isLoading: boolean;
+    loaderParentRef: React.RefObject<HTMLDivElement>;
+    loaderRef: React.RefObject<HTMLDivElement>;
 }
 
 export default function BookTable({
-    locale,
-    seed,
-    avgLikes,
-    avgReviews,
     books,
     isLoading,
-    setBooks,
-    setIsLoading
+    loaderRef,
+    loaderParentRef,
 }: BookTableProps) {
-    const [page, setPage] = useState(0);
-    const loaderRef = useRef(null);
-    const loaderParentRef = useRef(null);
-
-    const fetchBooks = useCallback(
-        async (page: number): Promise<Book[]> => {
-            const params = new URLSearchParams({
-                locale,
-                seed: seed.toString(),
-                page: page.toString(),
-                avgLikes: avgLikes.toString(),
-                avgReviews: avgReviews.toString(),
-            });
-
-            const res = await fetch(`/api/books?${params}`);
-            if (!res.ok) {
-                console.error("Failed to fetch books");
-                return [];
-            }
-            return await res.json();
-        },
-        [locale, seed, avgLikes, avgReviews]
-    );
-
-    const loadMore = useCallback(async () => {
-        if (isLoading) return;
-        setIsLoading(true);
-        const newPage = page + 1;
-        const newBooks = await fetchBooks(newPage);
-        setBooks((prev: Book[]) => [...prev, ...newBooks]);
-        setPage(newPage);
-        setIsLoading(false);
-    }, [page, fetchBooks, isLoading, setBooks, setIsLoading]);
-
-    useEffect(() => {
-        setPage(0);
-        fetchBooks(0).then(setBooks);
-    }, [locale, seed, avgLikes, avgReviews, fetchBooks, setBooks]);
-
-    useEffect(() => {
-        const currentRef = loaderRef.current;
-
-        if (!loaderParentRef.current || !currentRef) return;
-
-        const observer = new IntersectionObserver(
-            (entries) => entries[0].isIntersecting && loadMore(),
-            { root: loaderParentRef.current }
-        );
-
-        observer.observe(currentRef);
-
-        return () => {
-            observer.unobserve(currentRef);
-        };
-    }, [loadMore]);
-
     return (
         <div className="w-full">
             <Accordion type="single" collapsible className="w-full">

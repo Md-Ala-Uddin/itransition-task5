@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import BookTable from "./components/BookTable";
 import Controls from "./components/Controls";
 import { Book } from "./lib/definitions";
@@ -9,11 +9,14 @@ import Papa from "papaparse";
 export default function HomePage() {
     const [locale, setLocale] = useState("en-US");
     const [seed, setSeed] = useState(42);
-    const [likes, setLikes] = useState(5);
-    const [reviews, setReviews] = useState(2);
+    const [avgLikes, setAvgLikes] = useState(5);
+    const [avgReviews, setAvgReviews] = useState(2);
     const [showTable, setShowTable] = useState<boolean>(true);
     const [books, setBooks] = useState<Book[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [page, setPage] = useState(0);
+    const loaderRef = useRef<HTMLDivElement>(null!);
+    const loaderParentRef = useRef<HTMLDivElement>(null!);
 
     const handleRandomSeed = () => {
         const newSeed = Math.floor(Math.random() * 1000000);
@@ -35,32 +38,80 @@ export default function HomePage() {
         document.body.removeChild(link);
     };
 
+    const fetchBooks = useCallback(
+        async (page: number): Promise<Book[]> => {
+            const params = new URLSearchParams({
+                locale,
+                seed: seed.toString(),
+                page: page.toString(),
+                avgLikes: avgLikes.toString(),
+                avgReviews: avgReviews.toString(),
+            });
+
+            const res = await fetch(`/api/books?${params}`);
+            if (!res.ok) {
+                console.error("Failed to fetch books");
+                return [];
+            }
+            return await res.json();
+        },
+        [locale, seed, avgLikes, avgReviews]
+    );
+
+    const loadMore = useCallback(async () => {
+        if (isLoading) return;
+        setIsLoading(true);
+        const newPage = page + 1;
+        const newBooks = await fetchBooks(newPage);
+        setBooks((prev: Book[]) => [...prev, ...newBooks]);
+        setPage(newPage);
+        setIsLoading(false);
+    }, [page, fetchBooks, isLoading, setBooks, setIsLoading]);
+
+    useEffect(() => {
+        setPage(0);
+        fetchBooks(0).then(setBooks);
+    }, [locale, seed, avgLikes, avgReviews, fetchBooks, setBooks]);
+
+    useEffect(() => {
+        const currentRef = loaderRef.current;
+
+        if (!loaderParentRef.current || !currentRef) return;
+
+        const observer = new IntersectionObserver(
+            (entries) => entries[0].isIntersecting && loadMore(),
+            { root: loaderParentRef.current }
+        );
+
+        observer.observe(currentRef);
+
+        return () => {
+            observer.unobserve(currentRef);
+        };
+    }, [loadMore]);
+
     return (
         <div className="p-4 w-screen h-screen overflow-hidden">
             <Controls
                 showTable={showTable}
                 locale={locale}
                 seed={seed}
-                likes={likes}
-                reviews={reviews}
+                likes={avgLikes}
+                reviews={avgReviews}
                 onShowTableChange={setShowTable}
                 onLocaleChange={setLocale}
                 onSeedChange={setSeed}
-                onLikesChange={setLikes}
-                onReviewsChange={setReviews}
+                onLikesChange={setAvgLikes}
+                onReviewsChange={setAvgReviews}
                 onRandomizeSeed={handleRandomSeed}
                 onExportClick={handleExportClick}
             />
             {showTable ? (
                 <BookTable
-                    locale={locale}
-                    seed={seed}
-                    avgLikes={likes}
-                    avgReviews={reviews}
                     books={books}
                     isLoading={isLoading}
-                    setBooks={setBooks}
-                    setIsLoading={setIsLoading}
+                    loaderRef={loaderRef}
+                    loaderParentRef={loaderParentRef}
                 />
             ) : (
                 "grid"
