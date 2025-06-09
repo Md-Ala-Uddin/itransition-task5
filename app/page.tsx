@@ -5,6 +5,7 @@ import BookTable from "./components/BookTable";
 import Controls from "./components/Controls";
 import { Book } from "./lib/definitions";
 import Papa from "papaparse";
+import BookGrid from "./components/BookGrid";
 
 export default function HomePage() {
     const [locale, setLocale] = useState("en-US");
@@ -88,7 +89,7 @@ export default function HomePage() {
         return () => {
             observer.unobserve(currentRef);
         };
-    }, [loadMore]);
+    }, [loadMore, showTable]);
 
     return (
         <div className="p-4 w-screen h-screen overflow-hidden">
@@ -114,7 +115,12 @@ export default function HomePage() {
                     loaderParentRef={loaderParentRef}
                 />
             ) : (
-                "grid"
+                <BookGrid
+                    books={books}
+                    isLoading={isLoading}
+                    loaderRef={loaderRef}
+                    loaderParentRef={loaderParentRef}
+                />
             )}
         </div>
     );
