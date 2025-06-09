@@ -209,7 +209,7 @@ function ViewInput({
     onShowTableChange: (value: boolean) => void;
 }) {
     return (
-        <div className={`${className} flex justify-end items-center`}>
+        <div className={`${className} flex justify-center md:justify-end items-center`}>
             <ToggleGroup
                 type="single"
                 value={showTable ? "table" : "grid"}
