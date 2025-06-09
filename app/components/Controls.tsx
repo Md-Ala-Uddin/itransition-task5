@@ -220,19 +220,19 @@ function ViewInput({
                         onShowTableChange(false);
                     }
                 }}
-                className="scale-3d"
+                className="scale-70"
             >
                 <ToggleGroupItem
                     value="table"
                     aria-label="Table view"
-                    className="h-16 w-16"
+                    className="h-16 w-16 border border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                     <Table className="h-12 w-12" />
                 </ToggleGroupItem>
                 <ToggleGroupItem
                     value="grid"
                     aria-label="Grid view"
-                    className="h-16 w-16"
+                    className="h-16 w-16 border border-primary data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
                 >
                     <LayoutGrid className="h-12 w-12" />
                 </ToggleGroupItem>
