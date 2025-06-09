@@ -1,4 +1,3 @@
-import { useEffect, useRef, useState, useCallback } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import BookRow from "./BookRow";
 import { Book } from "@/app/lib/definitions";

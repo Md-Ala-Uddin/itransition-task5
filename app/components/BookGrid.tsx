@@ -1,7 +1,6 @@
 import { LoaderCircle } from "lucide-react";
 import { Book } from "../lib/definitions";
 import BookGridItem from "./BookGridItem";
-import { useRef } from "react";
 
 
 interface BookGridProps {
