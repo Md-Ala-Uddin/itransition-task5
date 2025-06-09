@@ -93,16 +93,19 @@ function LocaleInput({
     onValueChange: (value: string) => void;
 }) {
     return (
-        <Select value={value} onValueChange={onValueChange}>
-            <SelectTrigger className={className}>
-                <SelectValue placeholder="Select a Language" />
-            </SelectTrigger>
-            <SelectContent>
-                <SelectItem value="en-US">English (USA)</SelectItem>
-                <SelectItem value="de-DE">German (Germany)</SelectItem>
-                <SelectItem value="ja-JP">Japanese (Japan)</SelectItem>
-            </SelectContent>
-        </Select>
+        <div className={`${className} py-2 flex flex-col gap-1 border rounded-md`}>
+            <Label className="px-3">Language</Label>
+            <Select value={value} onValueChange={onValueChange}>
+                <SelectTrigger className="border-none">
+                    <SelectValue placeholder="Select a Language" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="en-US">English (USA)</SelectItem>
+                    <SelectItem value="de-DE">German (Germany)</SelectItem>
+                    <SelectItem value="ja-JP">Japanese (Japan)</SelectItem>
+                </SelectContent>
+            </Select>
+        </div>
     );
 }
 
